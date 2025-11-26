@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+"""
+ROS2 Executable for Fractional MPC Controller with CPU+GPU Acceleration
+"""
+
+if __name__ == '__main__':
+    from fractional_mpc_controller.controller_node_accelerated import main
+    main()

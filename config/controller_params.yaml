@@ -1,0 +1,42 @@
+# Fractional MPC Controller Parameters
+
+fractional_mpc_controller:
+  ros__parameters:
+    # System parameters
+    n_joints: 9
+    fractional_order: 0.15  # Caputo fractional order (0 < α <= 1)
+    control_dt: 0.01       # Sampling time (seconds)
+    joint_names:
+       - base_to_cylinder_joint
+       - cylinder_to_arm1_joint
+       - arm_link1_to_arm2_joint
+       - arm_link2_to_arm3_joint
+       - arm_link3_to_arm4_joint
+       - arm_link4_to_armFork_joint
+       - basket_link_to_armFork_joint
+       - basket_crane_link_to_basket_link
+       - winch_link_to_basket_crane_link
+       
+    # MPC parameters
+    mpc_horizon: 35        # Prediction horizon (steps) - OPTIMIZED for convergence
+
+    # Control limits (OPTIMIZED for fractional dynamics)
+    u_min: [-3.14,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0]  # Min position references (rad) - Stable
+    u_max: [ 3.14,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0]       # Max position references (rad) - Stable
+
+    # State limits
+    q_min: [-3.14, 0.0, 0.0,  0.0, 0.0,  0.0, 0.0, 0.0, 0.0]  # Min positions (rad)
+    q_max: [3.14,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0, 1.0, 1.0]       # Max positions (rad)
+    v_max: [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]            # Max velocities (rad/s)
+
+    # Cost weights (OPTIMIZED for convergence)
+    # Q: State tracking cost (positions more important than velocities)
+    # R: Control effort cost (high R prevents control saturation)
+    state_cost_position: 650.0  # Q_pos weight
+    state_cost_velocity: 13.0   # Q_vel weight
+    control_cost: 10.0          # R weight (TUNED to prevent saturation)
+
+    # Integral action gain for steady-state error elimination - ENABLED
+    # Higher Ki = more aggressive integral correction
+    # Typical range: 0.1 to 1.0 (0.1 = conservative tuning)
+    integral_gain: 0.05         # Ki (integral action gain) - ENABLED
